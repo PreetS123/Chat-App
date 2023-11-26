@@ -1,0 +1,23 @@
+.App{
+    background-image: url("https://storage.pixteller.com/designs/designs-images/2019-03-27/05/love-and-passion-background-backgrounds-romantic-1-5c9b9945866ba.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
+}
+
+
+::-webkit-scrollbar {
+    width: 0.5rem;
+    display: none;
+  }
+  
+  /* This style can vary based on your preferences */
+  ::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+  }
+  
+  /* Optional: Customize scrollbar track */
+  ::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
