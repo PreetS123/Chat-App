@@ -48,7 +48,7 @@ export const SignUp = ({activeTab}) => {
         theme: "light",
         });
     }
-    //  console.log("form data response",res);
+     console.log("form data response",res);
      toast.success(`Welcome ${res.data.name}`, {
       position: "top-right",
       autoClose: 1500,

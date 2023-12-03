@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { AxiosInstance } from "../config/AxiosInstance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "../config/User";
+import { AxiosInstance } from "../config/AxiosInstance";
 
 export const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ export const SignIn = () => {
       password: password,
     };
     setLoading(false);
-    await AxiosInstance.post("/api/user/login", formData)
+    AxiosInstance.post("/api/user/login", formData)
       .then((res) => {
         // console.log('login page',res);
         if (res.status !== 200) {
