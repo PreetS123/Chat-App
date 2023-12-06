@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
   password: { type: String, required: true },
   pic: {
     type: String,
-    required: true,
+    required: false,
     default: "https://i.stack.imgur.com/l60Hf.png",
   },
 },
