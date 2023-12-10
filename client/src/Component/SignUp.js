@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
-import { AxiosInstance } from "../config/AxiosInstance";
 import {  ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 
 export const SignUp = ({activeTab}) => {
   const [formData, setFormData] = useState({
@@ -28,14 +28,66 @@ export const SignUp = ({activeTab}) => {
 
   const handleInputChange = (e) => {
     let val= e.target;
-    setFormData({...formData,[val.name]:val.value});
+    let updatedFormData = { ...formData };
+     // Validating email
+  if (val.name === 'email') {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(val.value)) {
+      
+      return toast.error('Invalid email', {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    }
+  }
+  // Validating password
+  if (val.name === 'password') {
+   
+    if (val.value.length < 8) {
+      return toast.error('Password must be at least 8 characters long', {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    
+    if (!passwordRegex.test(val.value)) {
+      return toast.error('Password must be strong and meet the criteria.', {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    }
+  }
+  
+   // Updating formData if validation does
+   updatedFormData[val.name] = val.value;
+   setFormData(updatedFormData);
   };
 
   const handleFormSubmit = async(e) => {
     if(token) return navigate('/chat');
     e.preventDefault();
     // console.log("handleFormSubmit",formData)
-   await AxiosInstance.post("/api/user",formData).then((res)=>{
+   await axios.post("http://localhost:5000/api/user/register",formData).then((res)=>{
     if(res.status!==201){
       return toast.error('Something went wrong', {
         position: "top-right",
@@ -48,7 +100,7 @@ export const SignUp = ({activeTab}) => {
         theme: "light",
         });
     }
-     console.log("form data response",res);
+    //  console.log("form data response",res);
      toast.success(`Welcome ${res.data.name}`, {
       position: "top-right",
       autoClose: 1500,
@@ -60,7 +112,7 @@ export const SignUp = ({activeTab}) => {
       theme: "light",
       });
       if(res.data.token){
-        localStorage.setItem("token",res.data.token);
+        localStorage.setItem("signuptoken",res.data.token);
          activeTab(1);
       }
     }).catch(err=>console.log("Error in signup component",err))

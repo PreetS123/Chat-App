@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "../config/User";
-import { AxiosInstance } from "../config/AxiosInstance";
+import axios from "axios";
 
 export const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -26,28 +26,36 @@ export const SignIn = () => {
     setPassword(val.value);
   };
   const handleSubmit = async () => {
-    // if (token) return navigate("/chat");
-    let formData = {
-      email: email,
-      password: password,
-    };
+    setLoading(true);
+    if (email === "" || password === "") {
+      return toast.error("Please fill all the required field", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+
     setLoading(false);
-    AxiosInstance.post("/api/user/login", formData)
-      .then((res) => {
-        // console.log('login page',res);
-        if (res.status !== 200) {
-          return toast.error("Something went wrong", {
-            position: "top-right",
-            autoClose: 1500,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          });
-        }
-        toast.success(`Welcome ${res.data.name}`, {
+
+    try {
+      let formData = {
+        email: email,
+        password: password,
+      };
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
+      const response = await axios.post("http://localhost:5000/api/user/login", formData, config);
+
+      if (response.status === 200 || response.status === 201) {
+        toast.success(`Welcome ${response.data.name}`, {
           position: "top-right",
           autoClose: 1500,
           hideProgressBar: false,
@@ -57,20 +65,46 @@ export const SignIn = () => {
           progress: undefined,
           theme: "light",
         });
-        if (res.data.token) {
-          // localStorage.setItem("userInfo", JSON.stringify(res.data));
-          setToken(res.data);
+
+        if (response.data.token) {
+          setToken(response.data);
+          setLoading(false);
           navigate("/chat");
-          setLoading(true);
         }
-      })
-      .catch((err) => {
-        console.log("Error in login component", err.message);
+      } else if (response.status === 204) {
+        // Handle a successful login with no content
+        setLoading(true);
+      } else {
+        toast.error("Something went wrong", {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      console.log("Error in login component", error.message);
+      setLoading(false);
+      return toast.error(`Error occured! ${error.response.data.message}`, {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
+    }
   };
+
   return (
     <>
-    <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={1500}
         hideProgressBar={false}
@@ -151,7 +185,7 @@ export const SignIn = () => {
                 onClick={handleSubmit}
                 disabled={loading}
               >
-               {loading?"Logging Inn":"Login In"} 
+                {loading ? "Logging Inn" : "Login In"}
               </button>
             </div>
             <div>
