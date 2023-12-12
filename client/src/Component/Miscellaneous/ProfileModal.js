@@ -22,20 +22,12 @@ export const ProfileModal = ({ isModalOpen, closeModal, user }) => {
             <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:max-w-md">
               {/* Your modal content here */}
               <div className="p-4">
-                <h3 className="text-gray-400">{user.name}</h3>
-                {!user.pic.includes("fakepath") ? (
-                  <img
-                    className="w-60 h-56 rounded-sm"
-                    src={user.pic}
-                    alt="..."
-                  />
-                ) : (
-                  <img
-                    className="w-60 h-56 rounded-sm"
-                    src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                    alt="..."
-                  />
-                )}
+                <h3 className="text-gray-700">{user.username}</h3>
+                <img
+                  className="w-60 h-46 rounded-sm"
+                  src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                  alt="..."
+                />
                 <p className="text-gray-400 font-semibold">{user.email}</p>
               </div>
               <div className="border-t border-gray-200 p-2 flex justify-end">

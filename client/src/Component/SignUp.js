@@ -77,6 +77,7 @@ export const SignUp = ({activeTab}) => {
         });
     }
   }
+  if(val.name==="confirm")
   
    // Updating formData if validation does
    updatedFormData[val.name] = val.value;

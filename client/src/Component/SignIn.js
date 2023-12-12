@@ -52,7 +52,11 @@ export const SignIn = () => {
           "Content-type": "application/json",
         },
       };
-      const response = await axios.post("http://localhost:5000/api/user/login", formData, config);
+      const response = await axios.post(
+        "http://localhost:5000/api/user/login",
+        formData,
+        config
+      );
 
       if (response.status === 200 || response.status === 201) {
         toast.success(`Welcome ${response.data.name}`, {

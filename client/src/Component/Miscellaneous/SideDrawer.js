@@ -6,10 +6,10 @@ import { removeToken } from "../../config/User";
 import { ProfileModal } from "./ProfileModal";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AxiosInstance } from "../../config/AxiosInstance";
 import { ChatLoading } from "./ChatLoading";
 import { UserListItem } from "../UserAvatar/UserListItem";
 import { ChatSpinner } from "./ChatSpinner";
+import axios from "axios";
 
 export const SideDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,7 +70,7 @@ export const SideDrawer = () => {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    AxiosInstance.get(`/api/user?search=${search}`, config)
+    axios.get(`http://localhost:5000/api/user?search=${search}`, config)
       .then((res) => {
         setLoading(false);
         // console.log("sidebar response",res.data);
@@ -98,7 +98,7 @@ export const SideDrawer = () => {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    AxiosInstance.post('/api/chat',{userId},config)
+    axios.post('http://localhost:5000/api/chat',{userId},config)
       .then((res) => {
         // console.log("response of data as per userId",res.data);
         if(!chats.find((c)=>c._id===res.data._id)) setChats([res.data,...chats])

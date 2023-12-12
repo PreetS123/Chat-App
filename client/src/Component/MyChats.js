@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import { ChatState } from "../Context/ChatProvider";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AxiosInstance } from "../config/AxiosInstance";
 import { getToken } from "../config/User";
 import { ChatLoading } from "./Miscellaneous/ChatLoading";
 import { getSender } from "../config/ChatLogics";
 import { GroupChatModal } from "./Miscellaneous/GroupChatModal";
+import axios from "axios";
 
-export const MyChats = ({fetchAgain}) => {
+export const MyChats = ({ fetchAgain }) => {
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
   const [loggedUser, setLoggedUser] = useState();
 
@@ -18,7 +18,8 @@ export const MyChats = ({fetchAgain}) => {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    AxiosInstance.get("/api/chat", config)
+    axios
+      .get("http://localhost:5000/api/chat", config)
       .then((res) => {
         // console.log('myChat fetchChatts',res.data)
         setChats(res.data);
@@ -38,7 +39,7 @@ export const MyChats = ({fetchAgain}) => {
       });
   };
 
-  const bgChatBox = selectedChat === chats ? "bg-indigo-200" : "bg-gray-200";
+  const bgChatBox = selectedChat === chats ? "bg-blue-300" : "bg-gray-200";
   useEffect(() => {
     setLoggedUser(getToken());
     fetchChats();
