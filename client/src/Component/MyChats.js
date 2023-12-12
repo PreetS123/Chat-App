@@ -12,16 +12,16 @@ export const MyChats = ({ fetchAgain }) => {
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
   const [loggedUser, setLoggedUser] = useState();
 
-  const fetchChats = () => {
+  const fetchChats = async() => {
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    axios
+    await axios
       .get("http://localhost:5000/api/chat", config)
       .then((res) => {
-        // console.log('myChat fetchChatts',res.data)
+        console.log('myChat fetchChatts',res.data)
         setChats(res.data);
       })
       .catch((err) => {
@@ -39,7 +39,7 @@ export const MyChats = ({ fetchAgain }) => {
       });
   };
 
-  const bgChatBox = selectedChat === chats ? "bg-blue-300" : "bg-gray-200";
+  
   useEffect(() => {
     setLoggedUser(getToken());
     fetchChats();
@@ -59,7 +59,9 @@ export const MyChats = ({ fetchAgain }) => {
         theme="light"
       />
 
-      <div className="bg-white rounded-md p-3 w-full">
+      <div 
+      // d={{base:selectedChat?"none":"flex",md:"flex"}}
+      className={`bg-white rounded-md p-3 w-full`}>
         <div className="flex justify-between items-center p-2">
           <p className="text-3xl font-light">My Chats</p>
           <GroupChatModal>
@@ -72,10 +74,11 @@ export const MyChats = ({ fetchAgain }) => {
           {chats ? (
             <div className="overflow-y-scroll h-screen scrollbar-hide">
               {chats?.map((el) => {
+                const bgChatBox = selectedChat === el ? "bg-blue-300" : "bg-gray-200";
                 return (
                   <div
                     key={el._id}
-                    className={` ${bgChatBox} rounded-md px-3 py-2 cursor-pointer mt-1`}
+                    className={`${bgChatBox} rounded-md px-3 py-2 cursor-pointer mt-1`}
                     onClick={() => setSelectedChat(el)}
                   >
                     <p className="text-gray-600 font-light ">
