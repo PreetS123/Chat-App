@@ -54,7 +54,7 @@ export const SideDrawer = () => {
   const handleSearch = () => {
     if (!search || search.length <= 3) {
       return toast.error("Please enter something", {
-        position: "top-right",
+        position: "top-left",
         autoClose: 1500,
         hideProgressBar: false,
         closeOnClick: true,
@@ -78,8 +78,8 @@ export const SideDrawer = () => {
       })
       .catch((err) => {
         console.log("sidedrawer", err);
-        return toast.error("Something went wrong", {
-          position: "top-right",
+        return toast.error("Error Occured!", {
+          position: "top-left",
           autoClose: 1500,
           hideProgressBar: false,
           closeOnClick: true,
@@ -95,6 +95,7 @@ export const SideDrawer = () => {
     setLoadingChat(true);
     const config = {
       headers: {
+        "Content-type":"application/json",
         Authorization: `Bearer ${user.token}`,
       },
     };
@@ -256,7 +257,7 @@ export const SideDrawer = () => {
                   {searchResult?.map((el, i) => {
                     return (
                       <UserListItem
-                        key={i}
+                        key={el._id}
                         data={el}
                         handleFunction={() => accessChat(el._id)}
                       />
