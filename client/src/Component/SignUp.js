@@ -29,7 +29,7 @@ export const SignUp = ({activeTab}) => {
   const handleInputChange = (e) => {
     let val= e.target;
     let updatedFormData = { ...formData };
-    console.log('handleInputChange',updatedFormData)
+    // console.log('handleInputChange',updatedFormData)
      // Validating email
   if (val.name === 'email') {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -88,7 +88,7 @@ export const SignUp = ({activeTab}) => {
   const handleFormSubmit = async(e) => {
     if(token) return navigate('/chat');
     e.preventDefault();
-    console.log("handleFormSubmit",formData)
+    // console.log("handleFormSubmit",formData)
    await axios.post("http://localhost:5000/api/user/register",formData).then((res)=>{
     if(res.status!==201){
       return toast.error('Something went wrong', {
