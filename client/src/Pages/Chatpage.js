@@ -10,15 +10,15 @@ export const Chatpage = () => {
   const [fetchAgain, setFetchAgain] = useState(false);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div className="w-full">
       {user && <SideDrawer />}
-      <div className='flex justify-between p-1 w-["100%"] h-["91.5vh"]'>
-        <div className="w-2/5">
+      <div className='flex justify-between p-1 w-full h-["91.5vh"]'>
+        <div className="w-2/5 m-2">
           {user && (
             <MyChats fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
           )}
         </div>
-        <div className="w-3/5">
+        <div className="w-3/5 m-2">
           {user && (
             <ChatBox
               className="hidden md:block"

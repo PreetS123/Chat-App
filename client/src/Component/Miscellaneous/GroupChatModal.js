@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ChatState } from "../../Context/ChatProvider";
-import { AxiosInstance } from "../../config/AxiosInstance";
 import { UserListItem } from "../UserAvatar/UserListItem";
 import { UserBadgeItem } from "../UserAvatar/UserBadgeItem";
+import axios from "axios";
 
 export const GroupChatModal = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState();
@@ -25,7 +25,7 @@ export const GroupChatModal = ({ children }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  const handleSearch = (query) => {
+  const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
       return;
@@ -36,7 +36,7 @@ export const GroupChatModal = ({ children }) => {
       },
     };
     setLoading(true);
-    AxiosInstance.get(`/api/user?search=${query}`, config)
+    await axios.get(`http://localhost:5000/api/user?search=${query}`, config)
       .then((res) => {
         setLoading(false);
         // console.log("groupchatmodal handleSearch", res.data);
@@ -57,7 +57,7 @@ export const GroupChatModal = ({ children }) => {
         });
       });
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!groupChatName || !selectedUsers) {
       return toast.error("Please fill all the required field", {
         position: "top-right",
@@ -76,8 +76,8 @@ export const GroupChatModal = ({ children }) => {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    AxiosInstance.post(
-      "/api/chat/group",
+    await axios.post(
+      "http://localhost:5000/api/chat/group",
       {
         name: groupChatName,
         users: JSON.stringify(selectedUsers.map((u) => u._id)),
