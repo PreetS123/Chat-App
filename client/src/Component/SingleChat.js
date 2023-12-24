@@ -8,7 +8,10 @@ import { ChatSpinner } from "./Miscellaneous/ChatSpinner";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { ScrollableChat } from "./ScrollableChat";
+import { io } from "socket.io-client";
 
+const ENDPOINT = "http://localhost:5000";
+var socket, selectedChatCompare;
 export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -16,48 +19,78 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState();
+  const [socketConnected, setSocketConnected] = useState(false);
 
+  // useEffect for socket
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connection", () => setSocketConnected(true));
+  }, []);
+
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageReceived.chat._id
+      ) {
+        // give notification
+      } else {
+        setMessages([...messages, newMessageReceived]);
+      }
+    });
+  });
 
   // function to fetch message
-   const fetchMessages= async()=>{
-    if(!selectedChat) return;
-    try{
-       const config={
-        headers:{
-          "Content-Type":"application/json",
-          Authorization:`Bearer ${user.token}`,
-        }
-       };
-       setLoading(true);
-       const {data}= await axios.get(`http://localhost:5000/api/msg/${selectedChat._id}`,config)
-       console.log(data);
-       setMessages(data);
-       setLoading(false);
-    }catch(err){
-      console.log("fetchin message",err);
+  const fetchMessages = async () => {
+    if (!selectedChat) return;
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      setLoading(true);
+      const { data } = await axios.get(
+        `http://localhost:5000/api/msg/${selectedChat._id}`,
+        config
+      );
+      console.log(data);
+      setMessages(data);
+      setLoading(false);
+
+      socket.emit("join chat", selectedChat._id);
+    } catch (err) {
+      console.log("fetchin message", err);
     }
-   }
+  };
   // function to send messages
-  const sendMessages=async(e)=>{
-  if(e.key==="Enter" && newMessage){
-       try{
-        const config={
-          headers:{
-            "Content-Type":"application/json",
-            Authorization:`Bearer ${user.token}`
-          }
+  const sendMessages = async (e) => {
+    if (e.key === "Enter" && newMessage) {
+      try {
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
         };
         setNewMessage("");
-        const {data} = await axios.post("http://localhost:5000/api/msg",{
-          content:newMessage,
-          chatId:selectedChat._id,
-        },config)
-        console.log(data)
-        setMessages([...messages,data])
-       }catch(err){
-         console.log("sendMessage",err);
-         setLoading(false);
-         return toast.error("API error!", {
+        const { data } = await axios.post(
+          "http://localhost:5000/api/msg",
+          {
+            content: newMessage,
+            chatId: selectedChat._id,
+          },
+          config
+        );
+        // console.log(data)
+        socket.emit("new message", data);
+        setMessages([...messages, data]);
+      } catch (err) {
+        console.log("sendMessage", err);
+        setLoading(false);
+        return toast.error("API error!", {
           position: "top-right",
           autoClose: 1500,
           hideProgressBar: false,
@@ -67,14 +100,14 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           progress: undefined,
           theme: "light",
         });
-       }
-  }
-  }
-  const typeingHandler=(e)=>{
+      }
+    }
+  };
+  const typeingHandler = (e) => {
     setNewMessage(e.target.value);
-    
+
     //typing indicator logic here
-  }
+  };
 
   // console.log('selected',selectedChat)
   const userDetailsModal = () => {
@@ -94,12 +127,14 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     setIsUpdateModalOpen(false);
   };
 
-  useEffect(()=>{
-      fetchMessages();
-  },[selectedChat])
+  useEffect(() => {
+    fetchMessages();
+    selectedChatCompare = selectedChat;
+  }, [selectedChat]);
+
   return (
     <>
-    <ToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={1500}
         hideProgressBar={false}
@@ -132,10 +167,10 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     </div>
                   </div>
                   <ProfileModal
-                  user={getSenderFull(user, selectedChat.users)}
-                  closeModal={closeModal}
-                  isModalOpen={isModalOpen}
-                />
+                    user={getSenderFull(user, selectedChat.users)}
+                    closeModal={closeModal}
+                    isModalOpen={isModalOpen}
+                  />
                   <div className="w-full h-screen flex flex-col justify-end bg-gray-400 mt-2 overflow-y-hidden">
                     {/* Message Here*/}
                     {loading ? (
@@ -143,17 +178,19 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     ) : (
                       <>
                         <div className="messages">
-                        {/*Messages*/}
-                        <ScrollableChat messages={messages}/>
+                          {/*Messages*/}
+                          <ScrollableChat messages={messages} />
                         </div>
                       </>
                     )}
-                    <div className="w-full h-10 sticky bottom-0 p-1" onKeyDown={sendMessages}>
+                    <div
+                      className="w-full h-10 sticky bottom-0 p-1"
+                      onKeyDown={sendMessages}
+                    >
                       <input
                         type="text"
                         className="w-full rounded-md h-full px-3"
                         placeholder="Enter a  message..."
-                        
                         onChange={typeingHandler}
                         value={newMessage}
                       />
@@ -190,8 +227,6 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </div>
         </>
       )}
-
-     
     </>
   );
 };
