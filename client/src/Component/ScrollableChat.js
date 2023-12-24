@@ -6,11 +6,12 @@ import { Tooltip } from "./Miscellaneous/Tooltip";
 
 export const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
+  // console.log('msgs',user._id)
   return (
     <ScrollableFeed>
       {messages &&
         messages?.map((m, i) => (
-          <div className="flex" key={m._id}>
+          <div className="flex" key={i}>
             {(isSameSender(messages, m, i, user._id) ||
               isLastMessage(messages, i, user._id)) && (
               <Tooltip text={m.sender.name}>
@@ -37,6 +38,7 @@ export const ScrollableChat = ({ messages }) => {
             </span>
           </div>
         ))}
+
     </ScrollableFeed>
   );
 };
