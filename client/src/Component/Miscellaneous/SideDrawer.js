@@ -10,6 +10,8 @@ import { ChatLoading } from "./ChatLoading";
 import { UserListItem } from "../UserAvatar/UserListItem";
 import { ChatSpinner } from "./ChatSpinner";
 import axios from "axios";
+import { FaBell } from "react-icons/fa";
+
 
 export const SideDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -121,6 +123,7 @@ export const SideDrawer = () => {
         });
       });
   };
+  // console.log('------',notification)
 
   return (
     <>
@@ -153,7 +156,11 @@ export const SideDrawer = () => {
             onMouseEnter={openDropdown}
             onMouseLeave={closeDropdown}
           >
-            <div>
+            <div className="flex gap-3">
+           {/**  <div className="flex item-center">
+            <FaBell className="cursor-pointer text-white text-xl m-auto"/>
+            <span className="absolute top-2 left-3 mt-1 bg-red-500 text-xs font-medium text-white rounded-full px-2 py-1">{notification}</span>
+            </div>*/}
               <button
                 type="button"
                 onClick={toggleDropdown}
@@ -162,7 +169,7 @@ export const SideDrawer = () => {
                 aria-expanded={isOpen}
                 aria-haspopup="true"
               >
-                {user.name}
+                {user.username}
                 <svg
                   className={`-mr-1 h-5 w-5 text-gray-400 ${
                     isOpen ? "transform rotate-180" : ""

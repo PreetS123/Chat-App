@@ -2,27 +2,35 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { getToken } from "../config/User";
 import { useNavigate } from "react-router-dom";
 
-
 const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [selectedChat, setSelectedChat] = useState();
-  const [chats,setChats]= useState([]);
+  const [chats, setChats] = useState([]);
+  // const [notification, setNotification] = useState();
 
-  const navigate=useNavigate();
- 
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    const userInfo= getToken();
+  useEffect(() => {
+    const userInfo = getToken();
     setUser(userInfo);
 
-    if(!userInfo){
-      navigate('/')
+    if (!userInfo) {
+      navigate("/");
     }
-  },[navigate])
+  }, [navigate]);
   return (
-    <ChatContext.Provider value={{ user, setUser,selectedChat,setSelectedChat,chats,setChats }}>
+    <ChatContext.Provider
+      value={{
+        user,
+        setUser,
+        selectedChat,
+        setSelectedChat,
+        chats,
+        setChats,
+      }}
+    >
       {children}
     </ChatContext.Provider>
   );

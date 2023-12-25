@@ -6,6 +6,12 @@
     min-height: 100vh;
 }
 
+.messages {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
 
 ::-webkit-scrollbar {
     width: 0.5rem;
