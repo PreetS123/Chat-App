@@ -9,8 +9,10 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { ScrollableChat } from "./ScrollableChat";
 import { io } from "socket.io-client";
+import BaseUrl from "../App";
 
-const ENDPOINT = "http://localhost:5000";
+// const ENDPOINT = "http://localhost:5000";
+const ENDPOINT= BaseUrl;
 var socket, selectedChatCompare;
 export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,7 +68,7 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       };
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:5000/api/msg/${selectedChat._id}`,
+        `${BaseUrl}/api/msg/${selectedChat._id}`,
         config
       );
       // console.log(data);

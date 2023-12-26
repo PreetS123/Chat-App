@@ -89,7 +89,7 @@ export const SignUp = ({activeTab}) => {
     if(token) return navigate('/chat');
     e.preventDefault();
     // console.log("handleFormSubmit",formData)
-   await axios.post("http://localhost:5000/api/user/register",formData).then((res)=>{
+   await axios.post("/api/user/register",formData).then((res)=>{
     if(res.status!==201){
       return toast.error('Something went wrong', {
         position: "top-right",

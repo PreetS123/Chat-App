@@ -19,7 +19,7 @@ export const MyChats = ({ fetchAgain }) => {
       },
     };
     await axios
-      .get("http://localhost:5000/api/chat", config)
+      .get("/api/chat", config)
       .then((res) => {
         // console.log('myChat fetchChatts',res.data)
         setChats(res.data);
