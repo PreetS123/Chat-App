@@ -72,7 +72,7 @@ export const SideDrawer = () => {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    axios.get(`http://localhost:5000/api/user?search=${search}`, config)
+    axios.get(`/api/user?search=${search}`, config)
       .then((res) => {
         setLoading(false);
         // console.log("sidebar response",res.data);
@@ -101,7 +101,7 @@ export const SideDrawer = () => {
         Authorization: `Bearer ${user.token}`,
       },
     };
-    axios.post('http://localhost:5000/api/chat',{userId},config)
+    axios.post('/api/chat',{userId},config)
       .then((res) => {
         // console.log("response of data as per userId",res.data);
         if(!chats.find((c)=>c._id===res.data._id)) setChats([res.data,...chats])

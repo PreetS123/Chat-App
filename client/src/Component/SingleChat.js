@@ -9,10 +9,10 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { ScrollableChat } from "./ScrollableChat";
 import { io } from "socket.io-client";
-import BaseUrl from "../App";
+
 
 // const ENDPOINT = "http://localhost:5000";
-const ENDPOINT= BaseUrl;
+const ENDPOINT= "https://preeti-mern-chat-application.onrender.com";
 var socket, selectedChatCompare;
 export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -68,7 +68,7 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       };
       setLoading(true);
       const { data } = await axios.get(
-        `${BaseUrl}/api/msg/${selectedChat._id}`,
+        `/api/msg/${selectedChat._id}`,
         config
       );
       // console.log(data);
@@ -93,7 +93,7 @@ export const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         };
         setNewMessage("");
         const { data } = await axios.post(
-          "http://localhost:5000/api/msg",
+          "/api/msg",
           {
             content: newMessage,
             chatId: selectedChat._id,
