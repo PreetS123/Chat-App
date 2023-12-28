@@ -10,7 +10,6 @@ import { ChatLoading } from "./ChatLoading";
 import { UserListItem } from "../UserAvatar/UserListItem";
 import { ChatSpinner } from "./ChatSpinner";
 import axios from "axios";
-import { FaBell } from "react-icons/fa";
 
 
 export const SideDrawer = () => {
